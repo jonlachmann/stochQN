@@ -1,4 +1,4 @@
-logistic_loss <- function(coefs, X, y, weights = NULL, lambda = 1e-5) {
+logistic_loss <- function(coefs, X, y, weights = NULL, lambda = 0) {
 	pred    <- 1 / (1 + exp(-as.numeric(X %*% coefs)))
 	if (is.null(weights)) {
 		logloss <- mean(-(y * log(pred) + (1 - y) * log(1 - pred)))
@@ -9,7 +9,7 @@ logistic_loss <- function(coefs, X, y, weights = NULL, lambda = 1e-5) {
 	return(logloss + reg)
 }
 
-logistic_grad <- function(coefs, X, y, weights = NULL, lambda = 1e-5) {
+logistic_grad <- function(coefs, X, y, weights = NULL, lambda = 0) {
 	pred <- 1 / (1 + exp(-(X %*% coefs)))
 	if (is.null(weights)) {
 		grad <- colMeans(X * as.numeric(pred - y))
@@ -20,7 +20,7 @@ logistic_grad <- function(coefs, X, y, weights = NULL, lambda = 1e-5) {
 	return(as.numeric(grad))
 }
 
-logistic_Hess_vec <- function(coefs, vec, X, y, weights = NULL, lambda = 1e-5) {
+logistic_Hess_vec <- function(coefs, vec, X, y, weights = NULL, lambda = 0) {
 	pred <- 1 / (1 + exp(-as.numeric(X %*% coefs)))
 	if (is.null(weights)) {
 		diag <- pred * (1 - pred)
@@ -142,7 +142,7 @@ stochastic.logistic.regression <- function(formula = NULL, pos_class = NULL, dim
 		if (is.null(formula)) {
 			dim <- check.positive.integer(dim, "dim") + intercept
 			if (is.null(formula)) {
-				set.seed(random_seed)
+				#set.seed(random_seed)
 				x0 <- rnorm(dim, sd = 0.1)
 			}
 		}
@@ -384,7 +384,7 @@ partial_fit_logistic <- function(logistic_model, X, y = NULL, w = NULL) {
 			
 			dim           <- NCOL(sample_X)
 			this$colnames <- colnames(sample_X)
-			set.seed(this$random_seed)
+			#set.seed(this$random_seed)
 			x0                     <- rnorm(dim, sd = 0.1)
 			this$optimizer_args$x0 <- x0
 			this$coef              <- x0
